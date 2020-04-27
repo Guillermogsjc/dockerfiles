@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-if [ "${$S3_REGION}" = "**None**" ]; then
+if [ "${S3_REGION}" = "**None**" ]; then
   echo "Going for IAM Role def for AWS region"
 else
   export AWS_DEFAULT_REGION=$S3_REGION
