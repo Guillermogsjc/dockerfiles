@@ -3,14 +3,22 @@
 set -e
 set -o pipefail
 
+if [ "${$S3_REGION}" = "**None**" ]; then
+  echo "Going for IAM Role def for AWS region"
+else
+  export AWS_DEFAULT_REGION=$S3_REGION
+fi
+
 if [ "${S3_ACCESS_KEY_ID}" = "**None**" ]; then
-  echo "You need to set the S3_ACCESS_KEY_ID environment variable."
-  exit 1
+  echo "Going for IAM Role def for AWS ACCESS_KEY_ID"
+else
+  export AWS_ACCESS_KEY_ID=$S3_ACCESS_KEY_ID
 fi
 
 if [ "${S3_SECRET_ACCESS_KEY}" = "**None**" ]; then
-  echo "You need to set the S3_SECRET_ACCESS_KEY environment variable."
-  exit 1
+  echo "Going for IAM Role def for AWS SECRET_ACCESS_KEY"
+else
+  export AWS_SECRET_ACCESS_KEY=$S3_SECRET_ACCESS_KEY
 fi
 
 if [ "${S3_BUCKET}" = "**None**" ]; then
@@ -43,10 +51,6 @@ if [ "${POSTGRES_PASSWORD}" = "**None**" ]; then
   exit 1
 fi
 
-# env vars needed for aws tools
-export AWS_ACCESS_KEY_ID=$S3_ACCESS_KEY_ID
-export AWS_SECRET_ACCESS_KEY=$S3_SECRET_ACCESS_KEY
-export AWS_DEFAULT_REGION=$S3_REGION
 
 export PGPASSWORD=$POSTGRES_PASSWORD
 POSTGRES_HOST_OPTS="-h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER"
