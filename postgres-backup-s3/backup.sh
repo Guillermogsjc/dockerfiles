@@ -3,12 +3,7 @@
 set -e
 set -o pipefail
 
-if [ "${INITIAL_WAIT}" = "**None**" ]; then
-  echo "Waiting a bit before starting synchro cron"
-  export INITIAL_WAIT=60
-else
-  export INITIAL_WAIT=$INITIAL_WAIT
-fi
+
 
 if [ "${S3_REGION}" = "**None**" ]; then
   echo "Going for IAM Role def for AWS region"
@@ -63,9 +58,6 @@ if [ "${S3_ENDPOINT}" == "**None**" ]; then
 else
   AWS_ARGS="--endpoint-url ${S3_ENDPOINT}"
 fi
-
-echo "Waiting a bit"
-sleep $INITIAL_WAIT
 
 export PGPASSWORD=$POSTGRES_PASSWORD
 POSTGRES_HOST_OPTS="-h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER $POSTGRES_EXTRA_OPTS"
