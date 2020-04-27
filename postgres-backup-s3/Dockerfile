@@ -4,6 +4,7 @@ FROM alpine:3.9
 ADD install.sh install.sh
 RUN sh install.sh && rm install.sh
 
+ENV INITIAL_WAIT **None**
 ENV POSTGRES_DATABASE **None**
 ENV POSTGRES_HOST **None**
 ENV POSTGRES_PORT 5432
