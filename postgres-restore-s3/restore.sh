@@ -3,7 +3,14 @@
 set -e
 set -o pipefail
 
-if [ "${$S3_REGION}" = "**None**" ]; then
+if [ "${S3_LS_PAGE_SIZE}" = "**None**" ]; then
+  echo "Setting default AWS S3 LS page size"
+  export S3_LS_PAGE_SIZE=3000
+else
+  export S3_LS_PAGE_SIZE=$S3_LS_PAGE_SIZE
+fi
+
+if [ "${S3_REGION}" = "**None**" ]; then
   echo "Going for IAM Role def for AWS region"
 else
   export AWS_DEFAULT_REGION=$S3_REGION
@@ -57,7 +64,7 @@ POSTGRES_HOST_OPTS="-h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER"
 
 echo "Finding latest backup"
 
-LATEST_BACKUP=$(aws s3 ls s3://$S3_BUCKET/$S3_PREFIX/ | sort | tail -n 1 | awk '{ print $4 }')
+LATEST_BACKUP=$(aws s3 ls --page-size $S3_LS_PAGE_SIZE s3://$S3_BUCKET/$S3_PREFIX/ | sort | tail -n 1 | awk '{ print $4 }')
 
 echo "Fetching ${LATEST_BACKUP} from S3"
 
